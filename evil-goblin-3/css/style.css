@@ -1,0 +1,32 @@
+body{
+  margin:0;
+  overflow:hidden;
+  background:#111;
+  font-family:Arial,sans-serif;
+  color:white;
+}
+canvas{
+  display:block;
+  background:linear-gradient(#224422,#112211);
+}
+#ui{
+  position:absolute;
+  top:10px;
+  left:10px;
+  font-size:18px;
+  line-height:1.4;
+  white-space:pre-line;
+  pointer-events:none;
+  z-index:10;
+}
+#message{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:48px;
+  text-align:center;
+  display:none;
+  pointer-events:none;
+  z-index:50;
+}
