@@ -41,13 +41,25 @@ addEventListener("keydown", e => {
     return;
   }
 
-  if(k === "p" && !shopOpen){
+  if(k === "p" && !shopOpen && !statsOpen){
     paused = !paused;
+  }
+
+  if(k === "tab" || k === "i"){            // stats menu
+    e.preventDefault();
+    shopOpen = false;
+    statsOpen = !statsOpen;
+    paused = statsOpen;
+  }
+  if(k === "escape" && statsOpen){
+    statsOpen = false;
+    paused = false;
   }
 
   if(k === "g" && !e.repeat && !shopOpen && !paused) tryStartChallenge();
 
   if(k === "b"){
+    statsOpen = false;
     shopOpen = !shopOpen;
     paused = shopOpen;
     if(shopOpen) clampShopScroll();

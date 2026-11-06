@@ -3,7 +3,6 @@
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
-const uiEl = document.getElementById("ui");
 const msgEl = document.getElementById("message");
 
 function resize(){
@@ -100,6 +99,7 @@ let paused = false;
 let shopOpen = false;
 let selected = 0;
 let shopScroll = 0;
+let statsOpen = false;   // Stats menu (Tab / I)
 
 /* Emperor^2 challenge */
 let emperorKills = 0;    // total Emperor kills (the next Emperor's power = 2^kills)

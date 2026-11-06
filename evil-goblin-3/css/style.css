@@ -1,0 +1,31 @@
+body{
+  margin:0;
+  overflow:hidden;
+  background:#0b110d;
+  font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;
+  color:white;
+}
+canvas{
+  display:block;
+  background:radial-gradient(ellipse at center,#2c5a2c 0%,#1b3d1c 55%,#0f2410 100%);
+}
+#message{
+  position:absolute;
+  top:42%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:50px;
+  font-weight:800;
+  line-height:1.2;
+  letter-spacing:2px;
+  text-align:center;
+  text-shadow:0 3px 18px rgba(0,0,0,.9),0 0 3px rgba(0,0,0,.9);
+  display:none;
+  pointer-events:none;
+  z-index:50;
+}
+#message span{
+  font-weight:600;
+  letter-spacing:.5px;
+  color:#e6efe8;
+}
