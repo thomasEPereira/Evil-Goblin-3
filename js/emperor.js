@@ -13,7 +13,8 @@
    7  Final Form    + passive spiral shots, 12 orbs, 6 rays, 5-dash charges, fastest everything
 
    Emperor^2: every Emperor kill doubles the next one's power:
-     HP x2^k, damage +25% per doubling, shorter cooldowns, tougher escorts, bigger reward.
+     HP x2^k, damage +40% per doubling (all of it: attacks, orbs, shards, dashes, contact),
+     shorter cooldowns, tougher escorts, bigger reward.
 */
 
 const EMP_PHASES = 7;
@@ -31,9 +32,13 @@ function empPhaseHp(level, phase){
   return Math.round(EMP_BASE_HP * (1 + 0.2 * (phase - 1)) * Math.pow(2, level));
 }
 
-/* Boss damage: +25% per challenge doubling, +8% per phase */
+/* Boss damage: +40% per challenge doubling, +8% per phase */
+const EMP_LEVEL_DMG = 0.4;
+function empMult(g){
+  return (1 + EMP_LEVEL_DMG * g.level) * (1 + 0.08 * (g.phase - 1));
+}
 function empDmg(g, base){
-  return Math.round(base * (1 + 0.25 * g.level) * (1 + 0.08 * (g.phase - 1)));
+  return Math.round(base * empMult(g));
 }
 
 function spawnEmperor(){

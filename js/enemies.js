@@ -188,13 +188,14 @@ function updateGoblins(){
 
     const d = Math.hypot(player.x - g.x, player.y - g.y);
     if(d < g.r + player.size){
-      const damage = 0.25;                       // armor is applied inside hurtPlayer()
+      const em = g.kind === "emperor" ? empMult(g) : 1;    // Emperor^2 hits harder on contact too
+      const damage = 0.25 * em;                  // armor is applied inside hurtPlayer()
 
       if(wave === 1){
         hurtPlayer(damage);
       }else{
         hurtPlayer(damage * 4);
-        if(Math.random() < 0.01) hurtPlayer(20);
+        if(Math.random() < 0.01) hurtPlayer(20 * em);
       }
     }
   }

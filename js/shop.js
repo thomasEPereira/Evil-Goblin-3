@@ -1,12 +1,13 @@
 "use strict";
 /* ===== Shop =====
    Every upgrade now scales in BOTH price and power:
-     price(level)  - what the next purchase costs (grows with every purchase)
+     price(level)  - base price of the next purchase (grows linearly with every purchase;
+                     after PRICE_KNEE purchases of an item it also compounds exponentially, see itemCost)
      eff(level)    - how strong the next purchase is (also grows with every purchase)
    The shop always shows the effect of the NEXT purchase, so you can see it ramping up.
 
    Hard caps:  max HP 1000 | armor 40 (each point = -1.75% damage from EVERYTHING, so max -70%)
-               dash speed 44 | sword cooldown 8 frames | dash cooldown 15 frames  (move speed is uncapped)
+               speed 20 | dash speed 44 | sword cooldown 8 frames | dash cooldown 15 frames
 
    Add a new upgrade by adding an object to shopItems:
      tag, eff(lvl), name(eff,lvl), desc(eff,lvl), price(lvl),
@@ -18,6 +19,11 @@ const r1 = n => Math.round(n * 10) / 10;
 
 const SWORD_MIN_CD = 8;
 const DASH_MIN_CD = 15;
+const SPEED_CAP = 20;
+
+/* After this many purchases of an item, its price starts compounding by PRICE_GROWTH per extra purchase */
+const PRICE_KNEE = 10;
+const PRICE_GROWTH = 1.15;
 const DASH_SPEED_CAP = 44;
 
 const shopNote = { text: "", until: 0 };
@@ -52,7 +58,7 @@ const shopItems = [
     tag:"SWORD", level:0,
     eff: lvl => Math.round(25 * (1 + 0.12 * lvl)),
     name: e => "Sharpening Stone +" + e + " Sword Damage",
-    desc: () => "Permanent sword damage. Each stone adds more than the last; the price only rises 5g per stone.",
+    desc: () => "Permanent sword damage. Each stone adds more than the last. Price +5g per stone, then exponential after " + PRICE_KNEE + ".",
     price: lin(25, 0.2),
     max: null,
     apply: e => { player.sword.extraDmg += e; }
@@ -226,10 +232,10 @@ const shopItems = [
     tag:"UTIL", level:0,
     eff: lvl => r1(0.6 * (1 + 0.1 * lvl)),
     name: e => "Boots +" + e + " Speed",
-    desc: () => "Move faster. No cap. Now " + r1(player.speed) + ".",
+    desc: () => "Move faster. Now " + r1(player.speed) + " / " + SPEED_CAP + ".",
     price: lin(15, 0.4),
-    max: null,
-    apply: e => { player.speed += e; }
+    maxed: () => player.speed >= SPEED_CAP,
+    apply: e => { player.speed = Math.min(SPEED_CAP, player.speed + e); }
   },
   {
     tag:"UTIL", level:0,
@@ -272,7 +278,10 @@ function itemMaxed(it){
   return it.max !== null && it.max !== undefined && it.level >= it.max;
 }
 function itemEff(it){ return it.eff(it.level); }
-function itemCost(it){ return it.price(it.level); }
+function itemCost(it){
+  const over = Math.max(0, it.level - PRICE_KNEE);          // purchases past the knee
+  return Math.round(it.price(it.level) * Math.pow(PRICE_GROWTH, over));
+}
 function itemName(it){ return it.name(itemEff(it), it.level); }
 function itemDesc(it){ return it.desc(itemEff(it), it.level); }
 function itemLevelText(it){
