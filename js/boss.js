@@ -13,12 +13,12 @@ function randomMeteors(count, timer, dmg){
 
 function startPhase2(g){
   g.phase = 2;
-  g.speed *= 2;
+  g.speed *= 1.4;
 
   showMessage("GOBLIN KING<br>PHASE 2", 2000);
 
-  for(let i = 0; i < 40; i++) spawnGoblin();
-  randomMeteors(20, 90, 75);
+  for(let i = 0; i < 12; i++) spawnGoblin();
+  randomMeteors(12, 110, 75);
 }
 
 function startPhase3(g){
@@ -27,19 +27,19 @@ function startPhase3(g){
   g.dashA = null;
   g.chainLeft = 0;
   g.chainTimer = 0;
-  g.dashCooldown = 90;
-  g.streamTimer = 30;
-  g.targetTimer = 60;
+  g.dashCooldown = 150;
+  g.streamTimer = 45;
+  g.targetTimer = 90;
 
   showMessage("GOBLIN KING<br>FINAL PHASE", 2500);
 
-  for(let i = 0; i < 20; i++) spawnGoblin();
+  for(let i = 0; i < 6; i++) spawnGoblin();
   for(let i = 0; i < 6; i++) explode(g.x, g.y, "#a020f0");
 }
 
 /* ---------- Dash: windup (flash + shake, faster than the small goblins) -> quick slide ---------- */
 function beginBossDash(g, dmg, wind){
-  g.dashA = { wind, dmg, n: 5, slide: 0, sx: 0, sy: 0, ex: 0, ey: 0 };
+  g.dashA = { wind, dmg, n: 8, slide: 0, sx: 0, sy: 0, ex: 0, ey: 0 };
   g.moveLock = true;
 }
 
@@ -79,28 +79,28 @@ function updateBossAttacks(g){
   /* ---- Phase 3: constant meteors + chain dashes ---- */
   if(g.phase === 3){
     if(--g.streamTimer <= 0){
-      g.streamTimer = 14;
-      spawnMeteor(Math.random() * canvas.width, Math.random() * canvas.height, 70, 50);
+      g.streamTimer = 26;
+      spawnMeteor(Math.random() * canvas.width, Math.random() * canvas.height, 90, 50);
     }
 
     if(--g.targetTimer <= 0){          // one lands right next to you
-      g.targetTimer = 60;
+      g.targetTimer = 100;
       spawnMeteor(
         player.x + (Math.random() - 0.5) * 120,
         player.y + (Math.random() - 0.5) * 120,
-        60, 50
+        80, 50
       );
     }
 
     if(g.chainLeft > 0){
       if(!g.dashA && --g.chainTimer <= 0){
-        beginBossDash(g, 50, 12);       // quick windup, then the slide
+        beginBossDash(g, 50, 18);       // windup, then the slide
         g.chainLeft--;
-        g.chainTimer = 6;
-        if(g.chainLeft === 0) g.dashCooldown = 150;
+        g.chainTimer = 16;
+        if(g.chainLeft === 0) g.dashCooldown = 280;
       }
     }else if(!g.dashA && --g.dashCooldown <= 0){
-      g.chainLeft = 5;                 // 5 dashes in a row
+      g.chainLeft = 3;                 // 3 dashes in a row
       g.chainTimer = 0;
     }
     return;
@@ -108,16 +108,16 @@ function updateBossAttacks(g){
 
   /* ---- Phase 1 & 2 ---- */
   if(--g.meteorCooldown <= 0){
-    g.meteorCooldown = g.phase === 1 ? 300 : 150;
-    randomMeteors(6, 120, g.phase === 2 ? 75 : 40);
+    g.meteorCooldown = g.phase === 1 ? 420 : 260;
+    randomMeteors(5, 150, g.phase === 2 ? 75 : 40);
     if(g.phase === 2){
-      for(let i = 0; i < 5; i++) spawnGoblin();
+      for(let i = 0; i < 2; i++) spawnGoblin();
     }
   }
 
   if(!g.dashA && --g.dashCooldown <= 0){
-    g.dashCooldown = g.phase === 1 ? 300 : 120;
-    beginBossDash(g, 35, 20);
+    g.dashCooldown = g.phase === 1 ? 420 : 240;
+    beginBossDash(g, 35, 28);
   }
 }
 

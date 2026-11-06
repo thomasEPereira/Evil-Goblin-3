@@ -6,7 +6,7 @@
    The shop always shows the effect of the NEXT purchase, so you can see it ramping up.
 
    Hard caps:  max HP 1000 | armor 40 (each point = -1.75% damage from EVERYTHING, so max -70%)
-               speed 14 | dash speed 44 | sword cooldown 8 frames | dash cooldown 15 frames
+               dash speed 44 | sword cooldown 8 frames | dash cooldown 15 frames  (move speed is uncapped)
 
    Add a new upgrade by adding an object to shopItems:
      tag, eff(lvl), name(eff,lvl), desc(eff,lvl), price(lvl),
@@ -18,7 +18,6 @@ const r1 = n => Math.round(n * 10) / 10;
 
 const SWORD_MIN_CD = 8;
 const DASH_MIN_CD = 15;
-const SPEED_CAP = 14;
 const DASH_SPEED_CAP = 44;
 
 const shopNote = { text: "", until: 0 };
@@ -227,10 +226,10 @@ const shopItems = [
     tag:"UTIL", level:0,
     eff: lvl => r1(0.6 * (1 + 0.1 * lvl)),
     name: e => "Boots +" + e + " Speed",
-    desc: () => "Move faster. Now " + r1(player.speed) + " / " + SPEED_CAP + ".",
+    desc: () => "Move faster. No cap. Now " + r1(player.speed) + ".",
     price: lin(15, 0.4),
-    maxed: () => player.speed >= SPEED_CAP,
-    apply: e => { player.speed = Math.min(SPEED_CAP, player.speed + e); }
+    max: null,
+    apply: e => { player.speed += e; }
   },
   {
     tag:"UTIL", level:0,

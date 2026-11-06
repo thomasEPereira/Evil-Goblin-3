@@ -44,15 +44,15 @@ function spawnKing(){
     y: -100,
     hp: maxHp,
     maxHp,
-    speed: 4 + wave * 0.4,
+    speed: 3 + wave * 0.15,
     r: 90,
     boss: true,
     kind: "king",
     title: "GOBLIN KING",
     reward: 500,
     phase: 1,
-    meteorCooldown: 180,
-    dashCooldown: 300,
+    meteorCooldown: 240,
+    dashCooldown: 420,
     streamTimer: 0,
     targetTimer: 0,
     chainLeft: 0,
@@ -75,7 +75,7 @@ function spawnWave(){
 
   if(wave % 5 === 0){
     spawnKing();
-    for(let i = 0; i < 15 + wave; i++) spawnGoblin();
+    for(let i = 0; i < 6; i++) spawnGoblin();      // small escort
     return;
   }
 
